@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { ArrowRightIcon, CheckIcon, LoaderIcon } from 'lucide-react'
+import { AlertCircleIcon, ArrowRightIcon, CheckIcon, LoaderIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,16 +13,50 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-type Status = 'idle' | 'submitting' | 'done'
+type Status = 'idle' | 'submitting' | 'done' | 'error'
 
 export function IntakeForm({ idPrefix = 'intake' }: { idPrefix?: string }) {
   const [status, setStatus] = React.useState<Status>('idle')
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setStatus('submitting')
-    // Placeholder submission — wire this to your CRM or n8n webhook.
-    window.setTimeout(() => setStatus('done'), 900)
+    setErrorMessage(null)
+
+    const formData = new FormData(event.currentTarget)
+    const payload = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      company: formData.get('company'),
+      bottleneck: formData.get('bottleneck'),
+    }
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit form.')
+      }
+
+      setStatus('done')
+    } catch (err) {
+      console.error('Form submission error:', err)
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong. Please try again.'
+      )
+      setStatus('error')
+    }
   }
 
   if (status === 'done') {
@@ -91,6 +125,14 @@ export function IntakeForm({ idPrefix = 'intake' }: { idPrefix?: string }) {
           </FieldDescription>
         </Field>
       </FieldGroup>
+
+      {errorMessage && (
+        <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive">
+          <AlertCircleIcon className="size-4 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
       <Button
         type="submit"
         size="lg"
@@ -115,3 +157,4 @@ export function IntakeForm({ idPrefix = 'intake' }: { idPrefix?: string }) {
     </form>
   )
 }
+
