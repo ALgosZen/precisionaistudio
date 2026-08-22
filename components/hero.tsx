@@ -22,9 +22,9 @@ export function Hero() {
             Next-Gen AI &amp; Workflow Automation
           </span>
           <h1 className="animate-rise-in text-4xl leading-[1.05] font-medium tracking-tight text-balance sm:text-5xl lg:text-6xl [animation-delay:80ms]">
-            Automate Your Operations.
+            Run Your Business on Autopilot.
             <span className="block text-muted-foreground">
-              Reclaim 15+ Hours Every Week.
+              Get 15+ Hours Back Weekly
             </span>
           </h1>
           <p className="animate-rise-in max-w-2xl text-base leading-relaxed text-muted-foreground text-pretty sm:text-lg [animation-delay:160ms]">

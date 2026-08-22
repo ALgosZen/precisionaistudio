@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Precision AI Studio — AI Automation & n8n Workflow Agency',
   description:
-    'We build autonomous AI agents, intelligent lead pipelines, and custom n8n workflows that eliminate manual data entry and reclaim 15+ hours every week.',
+    'We build autonomous AI agents, intelligent lead pipelines, and custom n8n workflows that eliminate manual data entry and get 15+ hours back weekly.',
   generator: 'v0.app',
   openGraph: {
     title: 'Precision AI Studio — AI Automation & n8n Workflow Agency',
